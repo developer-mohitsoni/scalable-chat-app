@@ -1,5 +1,22 @@
 import { Server } from "socket.io";
 
+import "dotenv/config";
+
+import Redis from "ioredis";
+
+const pub = new Redis({
+  host: process.env.HOST,
+  port: Number(process.env.PORT),
+  username: process.env.USER,
+  password: process.env.PASSWORD,
+});
+const sub = new Redis({
+  host: process.env.HOST,
+  port: Number(process.env.PORT),
+  username: process.env.USER,
+  password: process.env.PASSWORD,
+});
+
 class SocketService {
   private _io: Server;
   constructor() {
@@ -21,6 +38,10 @@ class SocketService {
 
       socket.on("event:message", async ({ message }: { message: string }) => {
         console.log("New Message Received: ", message);
+
+        // publish this message to redis
+
+        await pub.publish("MESSAGES", JSON.stringify({ message }));
       });
     });
   }
