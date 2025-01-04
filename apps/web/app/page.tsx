@@ -1,8 +1,14 @@
 "use client";
 
+import { useState } from "react";
+import { useSocket } from "../context/SocketProvider";
 import classes from "./page.module.css";
 
 export default function Home() {
+  const { sendMessage } = useSocket();
+
+  const [message, setMessage] = useState("");
+
   return (
     <div>
       <div>
@@ -12,9 +18,15 @@ export default function Home() {
         <input
           className={classes["chat-input"]}
           type="text"
+          onChange={(e) => setMessage(e.target.value)}
           placeholder="Message..."
         />
-        <button className={classes["button"]}>Send</button>
+        <button
+          onClick={() => sendMessage(message)}
+          className={classes["button"]}
+        >
+          Send
+        </button>
       </div>
     </div>
   );
