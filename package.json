@@ -1,5 +1,5 @@
 {
-  "name": "scaleable realtime chat app",
+  "name": "scaleable-realtime-chat-app",
   "private": true,
   "scripts": {
     "build": "turbo build",
