@@ -5,15 +5,12 @@ import { useSocket } from "../context/SocketProvider";
 import classes from "./page.module.css";
 
 export default function Home() {
-  const { sendMessage } = useSocket();
+  const { sendMessage, messages } = useSocket();
 
   const [message, setMessage] = useState("");
 
   return (
     <div>
-      <div>
-        <h1>All Messages will appear here</h1>
-      </div>
       <div>
         <input
           className={classes["chat-input"]}
@@ -27,6 +24,11 @@ export default function Home() {
         >
           Send
         </button>
+      </div>
+      <div>
+        {messages.map((e, index) => (
+          <li key={index}>{e}</li>
+        ))}
       </div>
     </div>
   );
