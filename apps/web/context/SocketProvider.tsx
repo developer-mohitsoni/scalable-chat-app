@@ -22,7 +22,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   );
 
   useEffect(() => {
-    const _socket = io("http://localhost:3000");
+    const _socket = io("http://localhost:8000");
 
     return () => {
       _socket.disconnect();
