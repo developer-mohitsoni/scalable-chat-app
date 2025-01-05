@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.10.5",
+    "prisma": "^6.1.0",
     "ts-node": "^10.9.2",
     "tsc-watch": "^6.2.1",
     "tsx": "^4.19.2",
