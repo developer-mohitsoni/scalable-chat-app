@@ -3,6 +3,7 @@ import path from "node:path";
 import fs from "node:fs";
 
 import "dotenv/config";
+import prisma from "./prisma";
 
 const kafka = new Kafka({
   brokers: [`${process.env.KAFKA_HOST}:${process.env.KAFKA_PORT}`],
@@ -41,6 +42,40 @@ export const produceMessage = async (message: string) => {
   console.log("Message Produced: ", message);
 
   return true;
+};
+
+export const startMessageConsumer = async () => {
+  const consumer = await kafka.consumer({
+    groupId: "chat-app",
+  });
+
+  await consumer.connect();
+
+  await consumer.subscribe({ topic: "MESSAGES", fromBeginning: true });
+
+  await consumer.run({
+    autoCommit: true,
+    eachMessage: async ({ message, pause }) => {
+      if (!message.value) return;
+      console.log("New Message Received");
+
+      try {
+        await prisma.message.create({
+          data: {
+            text: message.value?.toString(),
+          },
+        });
+      } catch (err) {
+        console.error("Error saving message: ", err);
+
+        pause();
+
+        setTimeout(() => {
+          consumer.resume([{ topic: "MESSAGES" }]);
+        }, 60 * 1000);
+      }
+    },
+  });
 };
 
 export default kafka;
