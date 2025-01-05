@@ -1,13 +1,19 @@
-import { Kafka } from "kafkajs";
+import { Kafka, Producer } from "kafkajs";
 
 const kafka = new Kafka({
   brokers: [],
 });
 
-export const createProducer = async () => {
-  const producer = kafka.producer();
+let producer: null | Producer = null;
 
-  await producer.connect();
+export const createProducer = async () => {
+  if (producer) return producer;
+
+  const _producer = kafka.producer();
+
+  await _producer.connect();
+
+  producer = _producer;
 
   return producer;
 };
