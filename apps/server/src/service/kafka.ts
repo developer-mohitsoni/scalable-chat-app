@@ -1,7 +1,19 @@
 import { Kafka, Producer } from "kafkajs";
+import path from "node:path";
+import fs from "node:fs";
+
+import "dotenv/config";
 
 const kafka = new Kafka({
-  brokers: [],
+  brokers: [`${process.env.KAFKA_HOST}:${process.env.KAFKA_PORT}`],
+  ssl: {
+    ca: [fs.readFileSync(path.resolve("./ca.pem"), "utf8")],
+  },
+  sasl: {
+    username: process.env.KAFKA_USER as string,
+    password: process.env.KAFKA_PASSWORD as string,
+    mechanism: "plain",
+  },
 });
 
 let producer: null | Producer = null;
