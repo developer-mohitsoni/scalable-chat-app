@@ -5,6 +5,8 @@ import "dotenv/config";
 import Redis from "ioredis";
 import prisma from "./prisma";
 
+import { produceMessage } from "./kafka";
+
 const pub = new Redis({
   host: process.env.HOST,
   port: Number(process.env.PORT),
@@ -52,11 +54,9 @@ class SocketService {
         console.log("New Message Received from Redis: ", message);
         io.emit("message", message);
 
-        await prisma.message.create({
-          data: {
-            text: message,
-          },
-        });
+        await produceMessage(message);
+
+        console.log("Message Produce to Kafka Broker");
       }
     });
   }
