@@ -45,6 +45,7 @@ export const produceMessage = async (message: string) => {
 };
 
 export const startMessageConsumer = async () => {
+  console.log("Start Message Consumer...");
   const consumer = await kafka.consumer({
     groupId: "chat-app",
   });
