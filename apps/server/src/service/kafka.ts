@@ -18,4 +18,17 @@ export const createProducer = async () => {
   return producer;
 };
 
+export const produceMessage = async (message: string) => {
+  const producer = await createProducer();
+
+  await producer.send({
+    topic: "MESSAGES",
+    messages: [{ key: `message-${Date.now()}`, value: message }],
+  });
+
+  console.log("Message Produced: ", message);
+
+  return true;
+};
+
 export default kafka;
